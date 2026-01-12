@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karan Mulchandani | Healthcare Consultant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-primary: #1d1d1f;
+            --text-secondary: #4a4a4a;
+            --accent-coral: #ff6b6b;
+            --accent-mint: #a8e6cf;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7; 
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- BACKGROUND SILK CANVAS --- */
+        #silk-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            opacity: 0.6; 
+            filter: blur(2px); 
+            transform: scale(1.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-tag {
+            background-color: #333;
+            color: #fff;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 40px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        /* --- BLUR TEXT ANIMATION CSS --- */
+        .blur-word {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(-20px);
+            transition: opacity 0.8s ease, filter 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.65, 0.3, 0.9);
+            margin-right: 0.25em;
+            will-change: transform, opacity, filter;
+        }
+
+        .blur-word.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        /* General Reveal for non-text elements */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 100px;
+            text-align: left;
+        }
+        
+        @media (min-width: 768px) {
+             .hero { grid-template-columns: 1.2fr 0.8fr; }
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .hero-text p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .btn-contact {
+            background: #fff;
+            color: #333;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .value-prop {
+            margin-bottom: 80px;
+        }
+
+        .value-prop h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .value-prop p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 10px;
+        }
+
+        .progress-indicator {
+            height: 4px;
+            width: 100px;
+            background: linear-gradient(to right, var(--accent-mint), var(--accent-coral));
+            border-radius: 2px;
+            margin-top: 20px;
+            width: 0;
+            transition: width 1s ease;
+        }
+        
+        .progress-indicator.active {
+            width: 100px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        /* --- UPDATED CARD STYLES (TRANSPARENT GLASS) --- */
+        .service-item {
+            /* Transparent white to let background show through */
+            background: rgba(255, 255, 255, 0.15); 
+            
+            /* Stronger blur for glass effect legibility */
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            padding: 30px;
+            border-radius: 20px;
+            
+            /* Crisp semi-transparent border */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            
+            transition: opacity 0.8s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, background 0.4s;
+            cursor: default;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .service-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-item.active:hover {
+            transform: translateY(-12px);
+            /* Slightly more opaque on hover */
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .service-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-item p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            color: var(--accent-coral);
+            transition: transform 0.3s ease;
+        }
+
+        .service-item:hover .icon {
+            transform: scale(1.2);
+        }
+
+        footer {
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-text p.subtitle, .value-prop p { margin: 0 auto 20px auto; }
+            .services-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; text-align: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="silk-canvas"></canvas>
+
+    <div class="container">
+        <div class="nav-tag reveal">Healthcare Consultant & Analyst</div>
+
+        <section class="hero">
+            <div class="hero-text">
+                <h1 class="blur-text-target">Hi, I'm Karan. <br>I drive digital transformation.</h1>
+                <p class="subtitle reveal">
+                    I am a Healthcare Consultant with 8+ years of experience optimizing EHR workflows, ensuring HIPAA compliance, and leading Agile teams.
+                </p>
+                <a href="mailto:daskaran1996@gmail.com" class="btn-contact reveal">Contact Me</a>
+            </div>
+            
+            <div class="hero-visual"></div> 
+        </section>
+
+        <section class="value-prop">
+            <h2 class="blur-text-target">I bridge the gap between complex healthcare requirements and actionable solutions.</h2>
+            <p class="reveal">
+                Currently serving as a Business Analyst at KJ Systems India, specializing in claims lifecycle management and interoperability.
+            </p>
+            <div class="progress-indicator reveal"></div>
+        </section>
+
+        <section class="services-grid">
+            <div class="service-item">
+                <h3><span class="icon">⚡</span> EHR Optimization</h3>
+                <p>
+                    I optimize EHR workflows and manage claims lifecycles (837/835/270/271) to ensure operational excellence and revenue cycle efficiency.
+                </p>
+            </div>
+
+            <div class="service-item">
+                <h3><span class="icon">🔒</span> Compliance & EDI</h3>
+                <p>
+                    I ensure strict adherence to HIPAA, CMS regulations, and 5010 EDI transaction standards for secure data handling.
+                </p>
+            </div>
+
+            <div class="service-item">
+                <h3><span class="icon">🚀</span> Integration & Agile</h3>
+                <p>
+                    I lead cross-functional teams through Agile Scrum methodology and manage integrations for HIE, PointClickCare, and clearinghouses.
+                </p>
+            </div>
+        </section>
+
+        <footer class="reveal">
+            <div>© 2026 Karan Mulchandani</div>
+            <div>Vijayawada, India</div>
+            <div><a href="mailto:daskaran1996@gmail.com" style="color: inherit; text-decoration: none;">daskaran1996@gmail.com</a></div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // --- 1. SILK EFFECT CANVAS LOGIC ---
+            const canvas = document.getElementById('silk-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let lines = [];
+            const config = {
+                color: '#7B7481', 
+                speed: 5,         
+                scale: 1,
+                noiseIntensity: 1.5
+            };
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            let time = 0;
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.strokeStyle = config.color;
+                ctx.lineWidth = 0.5; 
+                
+                for (let i = 0; i < 20; i++) {
+                    ctx.beginPath();
+                    for (let x = 0; x < width; x += 10) {
+                        const y = height / 2 + 
+                                  Math.sin((x * 0.005) + time * 0.002 + i * 0.1) * 100 * config.noiseIntensity + 
+                                  Math.sin((x * 0.01) + time * 0.005) * 50;
+                        
+                        if (x === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                }
+
+                time += config.speed; 
+                requestAnimationFrame(draw);
+            }
+            draw();
+            // -----------------------------------
+
+
+            // --- 2. BLUR TEXT LOGIC ---
+            const blurTargets = document.querySelectorAll('.blur-text-target');
+            
+            blurTargets.forEach(target => {
+                const text = target.innerHTML;
+                const rawText = target.innerText; 
+                const words = rawText.split(' ');
+                target.innerHTML = ''; 
+                
+                words.forEach((word, index) => {
+                    const span = document.createElement('span');
+                    span.textContent = word + ' ';
+                    span.className = 'blur-word';
+                    span.style.transitionDelay = `${index * 150}ms`; 
+                    target.appendChild(span);
+                    
+                    if (index === Math.floor(words.length / 2) && rawText.length > 20) {
+                        target.appendChild(document.createElement('br'));
+                    }
+                });
+            });
+
+            // --- 3. INTERSECTION OBSERVER ---
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('blur-text-target')) {
+                            const words = entry.target.querySelectorAll('.blur-word');
+                            words.forEach(word => word.classList.add('active'));
+                        } else if (entry.target.classList.contains('reveal') || entry.target.classList.contains('service-item') || entry.target.classList.contains('progress-indicator')) {
+                            entry.target.classList.add('active');
+                            if(entry.target.classList.contains('service-item')) {
+                                const parent = entry.target.parentNode;
+                                const siblings = Array.from(parent.children);
+                                const index = siblings.indexOf(entry.target);
+                                entry.target.style.transitionDelay = `${index * 0.15}s`;
+                            }
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            blurTargets.forEach(el => observer.observe(el));
+            const revealElements = document.querySelectorAll('.reveal, .service-item, .progress-indicator');
+            revealElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
